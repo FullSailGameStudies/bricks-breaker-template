@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Game.h"
 
+
+
 Game::Game()
 {
 	Reset();
@@ -20,12 +22,47 @@ void Game::Reset()
 	ResetBall();
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
-	brick.width = 10;
-	brick.height = 2;
-	brick.x_position = 0;
-	brick.y_position = 5;
-	brick.doubleThick = true;
-	brick.color = ConsoleColor::DarkGreen;
+	Box zero, one, two, three, four;
+	zero.width = 10;
+	zero.height = 2;
+	zero.x_position = 0;
+	zero.y_position = 5;
+	zero.doubleThick = true;
+	zero.color = ConsoleColor::DarkGreen;
+
+	one.width = 10;
+	one.height = 2;
+	one.x_position = 15;
+	one.y_position = 5;
+	one.doubleThick = true;
+	one.color = ConsoleColor::DarkGreen;
+
+	two.width = 10;
+	two.height = 2;
+	two.x_position = 30;
+	two.y_position = 5;
+	two.doubleThick = true;
+	two.color = ConsoleColor::DarkGreen;
+
+	three.width = 10;
+	three.height = 2;
+	three.x_position = 45;
+	three.y_position = 5;
+	three.doubleThick = true;
+	three.color = ConsoleColor::DarkGreen;
+
+	four.width = 10;
+	four.height = 2;
+	four.x_position = 60;
+	four.y_position = 5;
+	four.doubleThick = true;
+	four.color = ConsoleColor::DarkGreen;
+	
+	bricks.push_back(zero);
+	bricks.push_back(one);
+	bricks.push_back(two);
+	bricks.push_back(three);
+	bricks.push_back(four);
 }
 
 void Game::ResetBall()
@@ -69,25 +106,39 @@ void Game::Render() const
 	ball.Draw();
 
 	// TODO #3 - Update render to render all bricks
-	brick.Draw();
-
+	for (size_t i = 0; i < bricks.size(); i++) {
+		bricks[i].Draw();
+	}
 	Console::Lock(false);
 }
 
 void Game::CheckCollision()
 {
 	// TODO #4 - Update collision to check all bricks
-	if (brick.Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
-	{
-		brick.color = ConsoleColor(brick.color - 1);
-		ball.y_velocity *= -1;
+	for (int i = 0; i < bricks.size(); i++) {
+		if (bricks[i].Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
+		{
+			bricks[i].color = ConsoleColor(bricks[i].color - 1);
+			ball.y_velocity *= -1;
 
-		// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
-
+			// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
+			if (bricks[i].color == ConsoleColor::Black) {
+				bricks.erase(bricks.begin() + i);
+			}
+		}
 	}
+	
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
+	
+	if (bricks.size() == 0) {
+		ResetBall();
+		ball.moving = false;
+		int width = Console::WindowWidth();
+		int spaces = (width - 31) / 2;
+		std::cout << std::string(spaces, ' ') << "You win! Press ‘R’ to play again";
 
+	}
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
 	{
