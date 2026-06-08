@@ -10,6 +10,7 @@ Game::Game()
 
 void Game::Reset()
 {
+	Console::Clear();
 	Console::SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Console::CursorVisible(false);
 	paddle.width = 12;
@@ -22,53 +23,30 @@ void Game::Reset()
 	ResetBall();
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
-	Box zero, one, two, three, four;
-	zero.width = 10;
-	zero.height = 2;
-	zero.x_position = 0;
-	zero.y_position = 5;
-	zero.doubleThick = true;
-	zero.color = ConsoleColor::DarkGreen;
-
-	one.width = 10;
-	one.height = 2;
-	one.x_position = 15;
-	one.y_position = 5;
-	one.doubleThick = true;
-	one.color = ConsoleColor::DarkGreen;
-
-	two.width = 10;
-	two.height = 2;
-	two.x_position = 30;
-	two.y_position = 5;
-	two.doubleThick = true;
-	two.color = ConsoleColor::DarkGreen;
-
-	three.width = 10;
-	three.height = 2;
-	three.x_position = 45;
-	three.y_position = 5;
-	three.doubleThick = true;
-	three.color = ConsoleColor::DarkGreen;
-
-	four.width = 10;
-	four.height = 2;
-	four.x_position = 60;
-	four.y_position = 5;
-	four.doubleThick = true;
-	four.color = ConsoleColor::DarkGreen;
 	
-	bricks.push_back(zero);
-	bricks.push_back(one);
-	bricks.push_back(two);
-	bricks.push_back(three);
-	bricks.push_back(four);
+	if (bricks.size() != 0) {
+		bricks.clear();
+	}
+	
+	for (size_t i = 1; i < 6; ++i) {
+		Box temp;
+		temp.width = 10;
+		temp.height = 2;
+		temp.x_position = (i * 14);
+		temp.y_position = 5;
+		temp.doubleThick = true;
+		temp.color = ConsoleColor::DarkCyan;
+		bricks.push_back(temp);
+	}
+
+	
+	
 }
 
 void Game::ResetBall()
 {
 	ball.x_position = paddle.x_position + paddle.width / 2;
-	ball.y_position = paddle.y_position - 1;
+	ball.y_position = paddle.y_position;
 	ball.x_velocity = rand() % 2 ? 1 : -1;
 	ball.y_velocity = -1;
 	ball.moving = false;
@@ -102,14 +80,41 @@ void Game::Render() const
 	Console::Lock(true);
 	Console::Clear();
 	
-	paddle.Draw();
-	ball.Draw();
+	if (bricks.size() != 0) {
+		paddle.Draw();
+		ball.Draw();
+	}
 
 	// TODO #3 - Update render to render all bricks
 	for (size_t i = 0; i < bricks.size(); i++) {
 		bricks[i].Draw();
 	}
 	Console::Lock(false);
+
+	if (bricks.size() == 0) {
+		Console::Clear;
+		std::string text = "You win! Press 'R' to play again";
+		int width = Console::WindowWidth();
+		int height = Console::WindowHeight();
+		width /= 2;
+		height /= 4;
+		//std::string(size_type count, char ch);
+		std::cout << std::string(height, '\n') << std::string(width, ' ') << text;
+		return;
+	}
+
+	int windowHeight = Console::WindowHeight();
+	if ((ball.y_position) == windowHeight) {
+		Console::Clear;
+		std::string text = "You lose. Press 'R' to play again";
+		int width = Console::WindowWidth();
+		int height = Console::WindowHeight();
+		width /= 2;
+		height /= 4;
+		//std::string(size_type count, char ch);
+		std::cout << std::string(height, '\n') << std::string(width, ' ') << text;
+		return;
+	}
 }
 
 void Game::CheckCollision()
@@ -134,9 +139,6 @@ void Game::CheckCollision()
 	if (bricks.size() == 0) {
 		ResetBall();
 		ball.moving = false;
-		int width = Console::WindowWidth();
-		int spaces = (width - 31) / 2;
-		std::cout << std::string(spaces, ' ') << "You win! Press ‘R’ to play again";
 
 	}
 
@@ -146,4 +148,9 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+
+	int windowHeight = Console::WindowHeight();
+	if ((ball.y_position) == windowHeight) {
+		ball.moving = false;
+	}
 }
