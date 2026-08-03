@@ -27,10 +27,13 @@ void Game::Reset()
 	brick.doubleThick = true;
 	brick.color = ConsoleColor::DarkGreen;
 
+	int startX = 0;
+	int space = 2;
+
 	for (int i = 0; i < 5; i++)
 	{
+		brick.x_position = startX + i * (brick.width + space);
 		bricks.push_back(brick);
-		brick.x_position += brick.width;
 	}
 }
 
@@ -75,8 +78,10 @@ void Game::Render() const
 	ball.Draw();
 
 	// TODO #3 - Update render to render all bricks
-	brick.Draw();
-
+	for (const Box& brick : bricks)
+	{
+		brick.Draw();
+	}
 	Console::Lock(false);
 }
 
