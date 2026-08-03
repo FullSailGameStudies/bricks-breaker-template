@@ -27,8 +27,10 @@ void Game::Reset()
 	brick.doubleThick = true;
 	brick.color = ConsoleColor::DarkGreen;
 
+	bricks.clear();
+
 	int startX = 0;
-	int space = 1;
+	int space = 5;
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -86,13 +88,18 @@ void Game::Render() const
 	// TODO #6 Render Win
 	if (bricks.empty())
 	{
-		Console::Clear();
 		Console::Lock(true);
-		Console::WordWrap(Console::WindowWidth() / 2 , Console::WindowHeight() / 2 - 6, 0, "You win! Press 'R' to play again.");
+		Console::WordWrap(Console::WindowWidth() / 2 , Console::WindowHeight() / 2, 0, "You win! Press 'R' to play again.");
 
 	}
 
-	// TODO
+	// TODO #7 Render Lose
+	if (ball.y_position >= Console::WindowHeight() - 1) {
+		Console::Lock(true);
+		Console::WordWrap(Console::WindowWidth() / 2 , Console::WindowHeight() / 2, 0, "You lose. Press 'R' to play again.");
+
+	}
+
 
 	Console::Lock(false);
 }
