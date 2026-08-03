@@ -25,7 +25,7 @@ void Game::Reset()
 	brick.height = 2;
 	brick.y_position = 5;
 	brick.doubleThick = true;
-	brick.color = ConsoleColor::DarkGreen;
+	brick.color = ConsoleColor::DarkCyan;
 	for (int i = 0; bricks.size() < 5; i++)
 	{
 		bricks.push_back(brick);
@@ -79,6 +79,7 @@ void Game::Render() const
 		bricks[i].Draw();
 	}
 
+
 	Console::Lock(false);
 }
 
@@ -101,7 +102,12 @@ void Game::CheckCollision()
 	}
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
+	if (bricks.empty() == true)
+	{
+		ball.moving = false;
 
+		
+	}
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
 	{
