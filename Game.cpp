@@ -88,18 +88,15 @@ void Game::Render() const
 	// TODO #6 Render Win
 	if (bricks.empty())
 	{
-		Console::Lock(true);
+		Console::ForegroundColor(Green);
 		Console::WordWrap(Console::WindowWidth() / 2 , Console::WindowHeight() / 2, 0, "You win! Press 'R' to play again.");
-
 	}
 
 	// TODO #7 Render Lose
 	if (ball.y_position >= Console::WindowHeight() - 1) {
-		Console::Lock(true);
+		Console::ForegroundColor(Red);
 		Console::WordWrap(Console::WindowWidth() / 2 , Console::WindowHeight() / 2, 0, "You lose. Press 'R' to play again.");
-
 	}
-
 
 	Console::Lock(false);
 }
@@ -124,7 +121,7 @@ void Game::CheckCollision()
 		// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
 		if (bricks.empty())
 		{
-		ball.moving = false;
+			ball.moving = false;
 		}
 
 		if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
