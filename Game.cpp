@@ -21,7 +21,7 @@ void Game::Reset()
 	ResetBall();
 	
 	// TODO #2 - Add this brick and 4 more bricks to the vector
-	
+	brick.clear();
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -31,7 +31,7 @@ void Game::Reset()
 		temp.x_position = 0 + (i * 10);
 		temp.y_position = 5;
 		temp.doubleThick = true;
-		temp.color = ConsoleColor::DarkGreen;
+		temp.color = ConsoleColor::DarkCyan;
 		brick.push_back(temp);
 	}
 	
@@ -73,9 +73,20 @@ void Game::Render() const
 {
 	Console::Lock(true);
 	Console::Clear();
+
+	if (brick.size() == 0)
+	{
+		std::cout << "\n\n\n\n\n\n\n\n\t\t\t\t\t YOU WIN! press r to reset";
+	}
+	else if (ball.y_position > 29)
+	{
+		std::cout << "\n\n\n\n\n\n\n\n\t\t\t\t\t YOU Lose! press r to reset";
+
+	}
+		paddle.Draw();
+		ball.Draw();
+		
 	
-	paddle.Draw();
-	ball.Draw();
 
 	// TODO #3 - Update render to render all bricks
 	for(int i = 0; i < brick.size(); i++)
@@ -108,7 +119,6 @@ void Game::CheckCollision()
 	if (brick.size() == 0)
 	{
 		ball.moving = false;
-		Render();
 	}
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
@@ -117,4 +127,8 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+	if (ball.y_position > 29)
+	{
+		ball.moving = false;
+	}
 }
