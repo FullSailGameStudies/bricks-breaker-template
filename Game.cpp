@@ -126,6 +126,6 @@ void Game::CheckCollision()
 	if (ball.y_position > 29)
 	{
 		ball.moving = false;
-
+	
 	}
 }
