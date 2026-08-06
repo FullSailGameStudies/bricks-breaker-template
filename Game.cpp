@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Game.h"
+#include <algorithm>
 
 Game::Game()
 {
@@ -90,8 +91,12 @@ void Game::CheckCollision()
 		{
 			brick.color = ConsoleColor(brick.color - 1);
 			ball.y_velocity *= -1;
+			
 			// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
-
+			if (brick.color == ConsoleColor::Black)
+			{
+				std::erase(bricks, brick);
+			}
 		}
 		if (brick.Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
 		{
@@ -99,7 +104,10 @@ void Game::CheckCollision()
 			ball.y_velocity *= -1;
 
 			// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
-
+			if (brick.color == ConsoleColor::Black)
+			{
+				std::erase(bricks, brick);
+			}
 		}
 	}
 
