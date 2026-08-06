@@ -20,6 +20,7 @@ void Game::Reset()
 	ResetBall();
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
+	Box brick;
 	brick.width = 10;
 	brick.height = 2;
 	brick.x_position = 0;
