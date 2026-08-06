@@ -20,6 +20,11 @@ void Game::Reset()
 	ResetBall();
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
+	if (bricks.size() < 5)
+	{
+		bricks.resize(5); 
+	}
+	
 	for (int i = 0; i < bricks.size(); i++)
 	{
 		Box& brick = bricks[i];
@@ -125,4 +130,10 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+	if (ball.y_position >= WINDOW_HEIGHT - 1)
+	{
+		ball.moving = false;
+		Console::SetCursorPosition(WINDOW_WIDTH / 2 - 7, WINDOW_HEIGHT / 2);
+		std::cout << "DEFEAT! Press R to reset.";
+	}
 }
