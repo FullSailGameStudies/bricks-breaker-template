@@ -31,7 +31,7 @@ void Game::Reset()
 		brick.x_position = spacing + i * (10 + spacing);
 		brick.y_position = 5;
 		brick.doubleThick = true;
-		brick.color = ConsoleColor::DarkGreen;
+		brick.color = ConsoleColor::DarkCyan;
 		bricks.push_back(brick);
 	}
 }
