@@ -82,6 +82,17 @@ void Game::Render() const
 		brick.Draw();
 	}
 
+	if (bricks.empty())
+	{
+		Console::SetCursorPosition(WINDOW_WIDTH / 2 - 7, WINDOW_HEIGHT / 2);
+		std::wcout << L"You win! Press R to play again.";
+	}
+	else if (ball.y_position >= WINDOW_HEIGHT - 1)
+	{
+		Console::SetCursorPosition(WINDOW_WIDTH / 2 - 7, WINDOW_HEIGHT / 2);
+		std::wcout << L"You lose. Press R to try again.";
+	}
+
 	Console::Lock(false);
 }
 
@@ -101,27 +112,22 @@ void Game::CheckCollision()
 				bricks.erase(bricks.begin() + i);
 				--i;
 			}
+			break;
 		}
 
 		// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
-		if (bricks.empty())
-		{
-			ball.moving = false;
-			Console::SetCursorPosition(WINDOW_WIDTH / 2 - 7, WINDOW_HEIGHT / 2);
-			std::wcout << L"You win! Press R to play again.";
-		}
-
-		if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
-		{
-			ball.y_velocity *= -1;
-		}
+		
 
 		// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
 		if (ball.y_position >= WINDOW_HEIGHT - 1)
 		{
 			ball.moving = false;
-			Console::SetCursorPosition(WINDOW_WIDTH / 2 - 7, WINDOW_HEIGHT / 2);
-			std::wcout << L"You lose. Press R to try again.";
+			return;
+		}
+
+		if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
+		{
+			ball.y_velocity *= -1;
 		}
 	}
 }
