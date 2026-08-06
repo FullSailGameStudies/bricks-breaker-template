@@ -21,13 +21,14 @@ void Game::Reset()
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
 	for (int i = 0; i < 5; ++i) {
-		Box brick;
-		brick.width = 10;
-		brick.height = 2;
-		brick.x_position = i * 10;
-		brick.y_position = 5;
-		brick.doubleThick = true;
-		brick.color = ConsoleColor::DarkGreen;
+		Box newBrick;
+		newBrick.width = 10;
+		newBrick.height = 2;
+		newBrick.x_position = i * 10;
+		newBrick.y_position = 5;
+		newBrick.doubleThick = true;
+		newBrick.color = ConsoleColor::DarkGreen;
+		brick.push_back(newBrick);
 	}
 }
 
@@ -75,6 +76,17 @@ void Game::Render() const
 	for (size_t i = 0; i < brick.size(); i++) {
 		brick[i].Draw();
 	}
+
+	if (brick.size() == 0){
+		Console::SetCursorPosition(25, 15);
+		std::cout << "You win! Press 'R' to play again.";
+	}
+
+	if (ball.y_position >= WINDOW_HEIGHT - 1) {
+		Console::SetCursorPosition(25, 15);
+		std::cout << "You lose. Press 'R' to play again.";
+	}
+
 	Console::Lock(false);
 }
 
@@ -106,7 +118,7 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
-	if (ball.y_position >= 25) {
+	if (ball.y_position >= WINDOW_HEIGHT - 1) {
 		ball.y_velocity = 0; ball.x_velocity = 0;
 	}
 }
