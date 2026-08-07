@@ -26,7 +26,9 @@ void Game::Reset()
 	//brick.y_position = 5;
 	//brick.doubleThick = true;
 	//brick.color = ConsoleColor::DarkGreen;
-	for (int i = 0; i < bricks.size(); i++)
+
+	bricks.clear();
+	for (int i = 0; i < 5; i++)
 	{
 		Box brick;
 		brick.width = 102;
@@ -36,6 +38,7 @@ void Game::Reset()
 		brick.doubleThick = true;
 		brick.color = ConsoleColor::DarkGreen;
 
+		bricks.push_back(brick);
 	}
 }
 
