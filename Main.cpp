@@ -29,5 +29,5 @@ int main()
 		auto durationMS = duration_cast<milliseconds>(end - start);
 		auto timeLeft = frameTimer - durationMS.count();
 		std::this_thread::sleep_for(milliseconds(int(timeLeft)));
- 	}
+  	}
 }

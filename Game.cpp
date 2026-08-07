@@ -10,6 +10,7 @@ void Game::Reset()
 {
 	Console::SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Console::CursorVisible(false);
+	
 	paddle.width = 12;
 	paddle.height = 2;
 	paddle.x_position = 32;
@@ -50,6 +51,7 @@ void Game::ResetBall()
 	ball.x_velocity = rand() % 2 ? 1 : -1;
 	ball.y_velocity = -1;
 	ball.moving = false;
+	
 }
 
 bool Game::Update()
@@ -82,12 +84,13 @@ void Game::Render() const
 	
 	if (isWin == true)
 	{
-		std::cout << "Win";
+		std::cout << "Win" << '\n' << "Press R to reset";
 	}
 	else if (isLose == true)
 	{
-		std::cout << "Lost";
+		std::cout << "Lost" << '\n' << "Press R to reset";
 	}
+	
 	paddle.Draw();
 	ball.Draw();
 
@@ -111,7 +114,7 @@ void Game::CheckCollision()
 		ball.y_velocity *= -1;
 
 		// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
-		if ((int)bricks[i].color <= 0)
+		if ((int)bricks[i].color <= -1)
 		{
 			bricks.erase(bricks.begin() + i);
 
@@ -134,7 +137,7 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
-	if (ball.y_position <= WINDOW_HEIGHT)
+	if (ball.y_position > paddle.y_position - 1)
 	{
 		ball.moving = false;
 
