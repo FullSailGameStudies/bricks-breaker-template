@@ -83,6 +83,12 @@ void Game::Render() const
 	paddle.Draw();
 	ball.Draw();
 
+	if (bricks.size() == 0) {
+		std::cout << "Victory! Press \"R\" to restart";
+		Console::Lock(false);
+		return;
+	}
+
 	// TODO #3 - Update render to render all bricks
 	int totalBricks = bricks.size();
 	int index = 0;
@@ -115,7 +121,11 @@ void Game::CheckCollision()
 	}
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
-
+	if (bricks.size() == 0)
+	{
+		ball.moving = false;
+		Game::Render();
+	}
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
 	{
