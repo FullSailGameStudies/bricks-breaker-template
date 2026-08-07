@@ -11,6 +11,9 @@ class Game
 	//Box brick;
 	std::vector<Box> bricks;
 
+	bool isWin = false;
+	bool isLose = false;
+
 public:
 	Game();
 	bool Update();
