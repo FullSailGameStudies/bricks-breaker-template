@@ -98,15 +98,20 @@ void Game::Render() const
 void Game::CheckCollision()
 {
 	// TODO #4 - Update collision to check all bricks
-	for (std::vector<Box>::iterator::value_type &brick : bricks) {
-		if (brick.Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
+	for (std::vector<Box>::iterator it = bricks.begin(); it != bricks.end(); ) {
+		if (it->Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
 		{
-			brick.color = ConsoleColor(brick.color - 1);
+			it->color = ConsoleColor(it->color - 1);
 			ball.y_velocity *= -1;
 
 			// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
-
+			if (it->color == ConsoleColor::Black)
+			{
+				it = bricks.erase(it);
+			}
+			else ++it;
 		}
+		else ++it;
 	}
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
