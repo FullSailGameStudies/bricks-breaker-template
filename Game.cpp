@@ -28,7 +28,7 @@ void Game::Reset()
 	//brick.color = ConsoleColor::DarkGreen;
 
 	bricks.clear();
-	for (int i = 0; i < 5 i++)
+	for (int i = 0; i < 5; i++)
 	{
 		Box brick;
 		brick.width = 102;
