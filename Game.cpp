@@ -68,6 +68,7 @@ bool Game::Update()
 //  All rendering, including text, should occur in the Render function
 void Game::Render() const
 {
+	Box brick;
 	Console::Lock(true);
 	Console::Clear();
 	
@@ -75,8 +76,10 @@ void Game::Render() const
 	ball.Draw();
 
 	// TODO #3 - Update render to render all bricks
-	brick.Draw();
-
+	for (const auto& brick : bricks)
+	{
+		brick.Draw();
+	}
 	Console::Lock(false);
 }
 
