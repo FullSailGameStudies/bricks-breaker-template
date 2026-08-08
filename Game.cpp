@@ -84,7 +84,15 @@ void Game::Render() const
 	ball.Draw();
 
 	if (bricks.size() == 0) {
+		Console::SetCursorPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 		std::cout << "Victory! Press \"R\" to restart";
+		Console::Lock(false);
+		return;
+	}
+
+	if (ball.y_position > WINDOW_HEIGHT) {
+		Console::SetCursorPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+		std::cout << "Defeat! Press \"R\" to restart";
 		Console::Lock(false);
 		return;
 	}
@@ -133,4 +141,10 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+ 	if (ball.y_position > WINDOW_HEIGHT)
+	{
+		ball.moving = false;
+		bricks.erase(bricks.begin(), bricks.end());
+		Game::Render();
+	}
 }
