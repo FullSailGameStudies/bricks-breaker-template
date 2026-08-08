@@ -8,6 +8,7 @@ Game::Game()
 
 void Game::Reset()
 {
+	Console::SetBufferSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Console::SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Console::CursorVisible(false);
 	Box brick;
@@ -26,7 +27,7 @@ void Game::Reset()
 		
 		brick.width = 10;
 		brick.height = 2;
-		brick.x_position = 0;
+		brick.x_position = i * (brick.width + 2);
 		brick.y_position = 5;
 		brick.doubleThick = true;
 		brick.color = ConsoleColor::DarkGreen;
@@ -96,7 +97,7 @@ void Game::Render() const
 void Game::CheckCollision()
 {
 	// TODO #4 - Update collision to check all bricks
-	for(int i = bricks.size() - 1; i >= 0; i++)
+	for(size_t i = bricks.size(); i-- > 0;)
 	{
 		if (bricks[i].Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
 		{
@@ -118,7 +119,7 @@ void Game::CheckCollision()
 		ball.moving = false;
 	}
 
-	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
+	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
 	{
 		ball.y_velocity *= -1;
 	}
