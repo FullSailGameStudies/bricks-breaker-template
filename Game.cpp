@@ -20,12 +20,22 @@ void Game::Reset()
 	ResetBall();
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
-	brick.width = 10;
-	brick.height = 2;
-	brick.x_position = 0;
-	brick.y_position = 5;
-	brick.doubleThick = true;
-	brick.color = ConsoleColor::DarkGreen;
+	bricks.clear();
+
+	for (int i = 0; i < 5; i++)
+	{
+		Box newBrick;
+		newBrick.width = 10;
+		newBrick.height = 2;
+		newBrick.x_position = i * 15;
+
+		newBrick.y_position = 5;
+		newBrick.doubleThick = true;
+		newBrick.color = ConsoleColor::DarkGreen;
+
+		bricks.push_back(newBrick);
+	}
+
 }
 
 void Game::ResetBall()
@@ -64,12 +74,26 @@ void Game::Render() const
 {
 	Console::Lock(true);
 	Console::Clear();
-	
+
 	paddle.Draw();
 	ball.Draw();
 
 	// TODO #3 - Update render to render all bricks
-	brick.Draw();
+	for (size_t i = 0; i < bricks.size(); i++)
+	{
+		bricks[i].Draw();
+	}
+
+	if (bricks.empty())
+	{
+		Console::SetCursorPosition(WINDOW_WIDTH / 2 - 17, WINDOW_HEIGHT / 2);
+		std::cout << "Victory! You win. Press 'R' to reset.";
+	}
+	else if (ball.y_position >= WINDOW_HEIGHT - 1)
+	{
+		Console::SetCursorPosition(WINDOW_WIDTH / 2 - 17, WINDOW_HEIGHT / 2);
+		std::cout << "You lose. Press 'R' to reset.";
+	}
 
 	Console::Lock(false);
 }
@@ -77,22 +101,49 @@ void Game::Render() const
 void Game::CheckCollision()
 {
 	// TODO #4 - Update collision to check all bricks
-	if (brick.Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
+	for (auto it = bricks.begin(); it != bricks.end(); )
 	{
-		brick.color = ConsoleColor(brick.color - 1);
-		ball.y_velocity *= -1;
+		if (it->Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
+		{
+			it->color = ConsoleColor(it->color - 1);
 
-		// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
 
+			ball.y_velocity = -ball.y_velocity;
+
+			if (it->color <= 0)
+			{
+				it = bricks.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+		else {
+			++it;
+
+
+			// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
+
+		}
+
+		// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
+		if (bricks.empty())
+		{
+			ball.moving = false;
+
+		}
+
+		if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
+		{
+			ball.y_velocity *= -1;
+		}
+
+		// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+		if (ball.y_position >= WINDOW_HEIGHT - 1)
+		{
+			ball.moving = false;
+
+		}
 	}
-
-	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
-
-
-	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
-	{
-		ball.y_velocity *= -1;
-	}
-
-	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
 }
