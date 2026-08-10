@@ -18,18 +18,20 @@ void Game::Reset()
 	ball.visage = 'O';
 	ball.color = ConsoleColor::Cyan;
 	ResetBall();
-
+	bricks.clear();
 	// TODO #2 - Add this brick and 4 more bricks to the vector
-	brick.width = 10;
-	brick.height = 2;
-	brick.y_position = 5;
-	brick.doubleThick = true;
-	brick.color = ConsoleColor::DarkCyan;
+	
 	for (int i = 0; bricks.size() < 5; i++)
 	{
+		brick.width = 10;
+		brick.height = 2;
+		brick.y_position = 5;
+		brick.x_position = 0 + (i *10);
+		brick.doubleThick = true;
+		brick.color = ConsoleColor::DarkCyan;
 		bricks.push_back(brick);
-		brick.x_position += 11;
 	}
+
 }
 
 void Game::ResetBall()
@@ -123,6 +125,7 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+
 	if (ball.y_position > 29)
 	{
 		ball.moving = false;
