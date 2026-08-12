@@ -21,27 +21,18 @@ void Game::Reset()
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
 	bricks.clear();
-	brick.width = 10;
-	brick.height = 2;
-	brick.x_position = 0;
-	brick.y_position = 5;
-	brick.doubleThick = true;
-	brick.color = ConsoleColor::DarkGreen;
-
-	brick.x_position = 0;
-	bricks.push_back(brick);
-
-	brick.x_position = 12;
-	bricks.push_back(brick); 
-
-	brick.x_position = 24;
-	bricks.push_back(brick);
-
-	brick.x_position = 36;
-	bricks.push_back(brick);
-
-	brick.x_position = 48;
-	bricks.push_back(brick);
+	
+	for (int i = 0; i < 5; ++i)
+	{
+		Box brick;
+		brick.width = 10;
+		brick.height = 2;
+		brick.x_position = i * 12; // Position bricks horizontally with spacing
+		brick.y_position = 5;
+		brick.doubleThick = true;
+		brick.color = ConsoleColor::DarkGreen;
+		bricks.push_back(brick);
+	}
 }
 
 void Game::ResetBall()
@@ -70,8 +61,9 @@ bool Game::Update()
 	if (GetAsyncKeyState('R') & 0x1)
 		Reset();
 
-	ball.Update();
+	
 	CheckCollision();
+	ball.Update();
 	return true;
 }
 
@@ -88,7 +80,7 @@ void Game::Render() const
 	{
 		Console::SetCursorPosition(WINDOW_WIDTH / 2 - 7, WINDOW_HEIGHT / 2);
 		Console::ForegroundColor(ConsoleColor::Yellow);
-		std::cout << "You Win! Press 'R' to play again.";
+		std::cout << "You win! Press 'R' to play again.";
 	}
 
 	if (ball.y_position >= WINDOW_HEIGHT - 1)
@@ -143,6 +135,5 @@ void Game::CheckCollision()
 	if (ball.y_position >= WINDOW_HEIGHT - 1)
 	{
 		ball.moving = false;
-		std::cout << ball.y_position; 
 	}
 }
