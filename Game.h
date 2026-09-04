@@ -1,14 +1,22 @@
 #pragma once
 #include "Box.h"
 #include "Ball.h"
+#include <vector>
+
+enum class GameState
+{
+	Playing,
+	Won,
+	Lost
+};
 
 class Game
 {
 	Ball ball;
 	Box paddle;
-
-	// TODO #1 - Instead of storing 1 brick, store a vector of bricks (by value)
-	Box brick;
+	GameState state = GameState::Playing;
+	// #1 - Instead of storing 1 brick, store a vector of bricks (by value)
+	std::vector<Box> bricks;
 
 public:
 	Game();
