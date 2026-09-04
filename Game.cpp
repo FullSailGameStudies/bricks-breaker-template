@@ -20,12 +20,9 @@ void Game::Reset()
 	ResetBall();
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
-	brick.width = 10;
-	brick.height = 2;
-	brick.x_position = 0;
-	brick.y_position = 5;
-	brick.doubleThick = true;
-	brick.color = ConsoleColor::DarkGreen;
+	// Complete
+	bricks.clear();
+	bricks = GenerateBricks(5);
 }
 
 void Game::ResetBall()
@@ -69,7 +66,10 @@ void Game::Render() const
 	ball.Draw();
 
 	// TODO #3 - Update render to render all bricks
-	brick.Draw();
+	//complete
+
+	for (int currBrick = 0; currBrick < bricks.size(); ++currBrick)
+		bricks[currBrick].Draw();
 
 	Console::Lock(false);
 }
@@ -77,17 +77,26 @@ void Game::Render() const
 void Game::CheckCollision()
 {
 	// TODO #4 - Update collision to check all bricks
-	if (brick.Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
-	{
-		brick.color = ConsoleColor(brick.color - 1);
-		ball.y_velocity *= -1;
+	for (int currBrick = 0; currBrick < bricks.size(); ++currBrick) {
+		if (bricks[currBrick].Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
+		{
+			bricks[currBrick].color = ConsoleColor(bricks[currBrick].color - 1);
+			ball.y_velocity *= -1;
 
-		// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
-
+			// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
+			DamageBrick(bricks[currBrick]);
+			if (bricks[currBrick].color == Black)
+				bricks.erase(bricks.begin() + currBrick);
+		}
 	}
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
 
+	if (bricks.empty()) {
+		Console::WordWrap(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4, WINDOW_WIDTH, "Victory: \tPress \"R\" To Play Again");
+		StopBall();
+	}
+		
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
 	{
@@ -95,4 +104,56 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+	if (ball.y_position == WINDOW_HEIGHT) {
+		Console::WordWrap(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 4, WINDOW_WIDTH, "Defeat: \tPress \"R\" To Play Again");
+		StopBall();
+	}
 }
+
+std::vector<Box> Game::GenerateBricks(int _numOfBricks)
+{
+	std::vector<Box> output;
+
+
+	Box tempBrick;
+	tempBrick.width = 10;
+	tempBrick.height = 2;
+	tempBrick.x_position = 0;
+	tempBrick.y_position = 5;
+	tempBrick.doubleThick = true;
+	tempBrick.color = ConsoleColor::DarkGreen;
+	int offSet = (WINDOW_WIDTH) / _numOfBricks;
+	
+	output.push_back(tempBrick);
+	
+
+	for (int i = 1; i < _numOfBricks; ++i) {
+
+		tempBrick.x_position = i*offSet;
+		output.push_back(tempBrick);
+	}
+
+
+
+	return output;
+}
+
+void Game::DamageBrick(Box& _brick)
+{
+	_brick.DecreaseBoxHealth();
+	if (_brick.boxHealth == 2) {
+		_brick.color = Blue;
+	}
+	else if (_brick.boxHealth == 1)
+		_brick.color = DarkBlue;
+	else if (_brick.boxHealth == 0)
+		_brick.color = Black;
+}
+
+void Game::StopBall()
+{
+	ball.x_velocity = 0;
+	ball.y_velocity = 0;
+}
+
+
