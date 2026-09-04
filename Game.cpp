@@ -81,7 +81,10 @@ void Game::Render() const
 	ball.Draw();
 
 	// TODO #3 - Update render to render all bricks
-	brick.Draw();
+	for (size_t brickPos = 0; brickPos < bricks.size(); ++brickPos)
+	{
+		bricks[brickPos].Draw();
+	}
 
 	Console::Lock(false);
 }
@@ -89,6 +92,7 @@ void Game::Render() const
 void Game::CheckCollision()
 {
 	// TODO #4 - Update collision to check all bricks
+	/*
 	if (brick.Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
 	{
 		brick.color = ConsoleColor(brick.color - 1);
@@ -97,7 +101,7 @@ void Game::CheckCollision()
 		// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
 
 	}
-
+	*/
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
 
 
