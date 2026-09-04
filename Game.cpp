@@ -26,7 +26,7 @@ void Game::Reset()
    { 
 	brick.width = 10;
 	brick.height = 2;
-	brick.x_position = 0;
+	brick.x_position = (i * 14) + 6;
 	brick.y_position = 5;
 	brick.doubleThick = true;
 	brick.color = ConsoleColor::DarkGreen;
@@ -78,7 +78,12 @@ void Game::Render() const
 	ball.Draw();
 
 	// TODO #3 - Update render to render all bricks
+	
+	for (const auto& brick : bricks)
+	{ 
 	brick.Draw();
+	}
+	if (bricks.empty())
 
 	Console::Lock(false);
 }
