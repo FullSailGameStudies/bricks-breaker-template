@@ -85,6 +85,18 @@ void Game::Render() const
 	{
 		bricks[brickPos].Draw();
 	}
+	if (m_gameWon)
+	{
+		Console::SetCursorPosition(23, 20);
+		Console::ForegroundColor(ConsoleColor::Yellow);
+		std::cout << "You win! Press 'R' to play again.";
+	}
+	else if (m_gameLost)
+	{
+		Console::SetCursorPosition(23, 20);
+		Console::ForegroundColor(ConsoleColor::Red);
+		std::cout << "You lose. Press 'R' to play again.";
+	}
 
 	Console::Lock(false);
 }
@@ -92,23 +104,45 @@ void Game::Render() const
 void Game::CheckCollision()
 {
 	// TODO #4 - Update collision to check all bricks
-	/*
-	if (brick.Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
+	for (std::vector<Box>::iterator it = bricks.begin(); it != bricks.end(); )
 	{
-		brick.color = ConsoleColor(brick.color - 1);
-		ball.y_velocity *= -1;
+		if (it->Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
+		{
+			it->color = ConsoleColor(it->color - 1);
+			ball.y_velocity *= -1;
 
-		// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
-
+			// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
+			if (it->color <= ConsoleColor::Black)
+			{
+				it = bricks.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+			break;
+		}
+		else
+		{
+			++it;
+		}
 	}
-	*/
-	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
-
-
-	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
+		// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
+	if (bricks.empty())
 	{
-		ball.y_velocity *= -1;
+		ball.moving = false;
+		m_gameWon = true;
 	}
 
-	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
-}
+		if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
+		{
+			ball.y_velocity *= -1;
+		}
+
+		// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+		if (ball.y_position >= WINDOW_HEIGHT - 1)
+		{
+			m_gameLost = true;
+			ball.moving = false;
+		}
+	}
