@@ -7,6 +7,8 @@ public:
 	bool doubleThick = false;
 	int width = 2;
 	int height = 2;
+	int hits = 0;
+
 	void Draw() const override;
 	bool Contains(int x, int y);
 };
