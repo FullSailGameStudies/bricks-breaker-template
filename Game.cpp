@@ -20,12 +20,21 @@ void Game::Reset()
 	ResetBall();
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
-	brick.width = 10;
-	brick.height = 2;
-	brick.x_position = 0;
-	brick.y_position = 5;
-	brick.doubleThick = true;
-	brick.color = ConsoleColor::DarkGreen;
+	for (int i = 0; i < 5; i++) //Adding a total of 5 bricks
+	{
+		//Had to define brick
+		Box brick;
+		int spacing = 16;
+
+		brick.width = 10;
+		brick.height = 2;
+		brick.x_position = 0 + i * spacing; //This should make the postions be evenly spaced apart
+		brick.y_position = 5;
+		brick.doubleThick = true;
+		brick.color = ConsoleColor::DarkGreen;
+
+		bricks.push_back(brick); //Pushing brick into the vector bricks
+	}
 }
 
 void Game::ResetBall()
@@ -69,7 +78,10 @@ void Game::Render() const
 	ball.Draw();
 
 	// TODO #3 - Update render to render all bricks
-	brick.Draw();
+	for (int i = 0; i < bricks.size(); i++)	//Getting all the bricks in the vector
+	{
+		bricks[i].Draw();
+	}
 
 	Console::Lock(false);
 }
@@ -77,17 +89,29 @@ void Game::Render() const
 void Game::CheckCollision()
 {
 	// TODO #4 - Update collision to check all bricks
-	if (brick.Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
+	for (int i = 0; i < bricks.size(); i++)
 	{
-		brick.color = ConsoleColor(brick.color - 1);
-		ball.y_velocity *= -1;
-
+		if (bricks[i].Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
+		{
+			bricks[i].color = ConsoleColor(bricks[i].color - 1);
+			ball.y_velocity *= -1;
+	
 		// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
-
+			if (bricks[i].color == ConsoleColor::Black)
+			{
+				bricks.erase(bricks.begin() + i);
+				i--;
+			}
+		}
 	}
-
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
-
+	if (bricks.empty())
+	{
+		ball.moving = false;
+		std::string win = "You win! Press 'R' to play again.";
+		Console::SetCursorPosition((WINDOW_WIDTH - win.length()) / 2, WINDOW_HEIGHT / 2); //Window Width is centering the text halfway while Window Height is putting it in the middle
+		std::cout << win;
+	}
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
 	{
@@ -95,4 +119,11 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+	if (ball.y_position >= WINDOW_HEIGHT - 1) //If I want a faster response I would add - 8
+	{
+		ball.moving = false;
+		std::string lose = "You lose. Press 'R' to play again.";
+		Console::SetCursorPosition((WINDOW_WIDTH - lose.length()) / 2, WINDOW_HEIGHT / 2);
+		std::cout << lose;
+	}
 }
