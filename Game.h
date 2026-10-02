@@ -1,14 +1,20 @@
 #pragma once
 #include "Box.h"
 #include "Ball.h"
+#include <vector>
+#include <string>
 
 class Game
 {
 	Ball ball;
 	Box paddle;
 
-	// TODO #1 - Instead of storing 1 brick, store a vector of bricks (by value)
-	Box brick;
+	// Store multiple bricks
+	std::vector<Box> bricks;
+
+	// Game paused (win/lose) state and message
+	bool paused = false;
+	std::string endMessage;
 
 public:
 	Game();
