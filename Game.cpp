@@ -76,6 +76,16 @@ void Game::Render() const
 	for (int i = 0; i < bricks.size(); i++) {
 		bricks[i].Draw();
 	}
+	if (bricks.empty()) {
+		Console::ForegroundColor(ConsoleColor::Green);
+		Console::SetCursorPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+		std::cout << "YOU WON!!! Press R to restart";
+	}
+	if (ball.y_position >= (WINDOW_HEIGHT - 1)) {
+		Console::ForegroundColor(ConsoleColor::Red);
+		Console::SetCursorPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+		std::cout << "YOU LOST!!! Press R to restart";
+	}
 	Console::Lock(false);
 }
 
@@ -92,6 +102,7 @@ void Game::CheckCollision()
 			if (bricks[i].color == ConsoleColor::Black) {
 				bricks.erase(bricks.begin() + i);
 			}
+			break;
 		}
 	}
 
@@ -99,8 +110,7 @@ void Game::CheckCollision()
 	if (bricks.empty()) {
 		ball.x_velocity = 0;
 		ball.y_velocity = 0;
-		Console::ForegroundColor(ConsoleColor::Green);
-		std::cout << "YOU WON!!! Press R to restart";
+		
 	}
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
@@ -113,8 +123,6 @@ void Game::CheckCollision()
 	if (ball.y_position >= (WINDOW_HEIGHT - 1)) {
 		ball.x_velocity = 0;
 		ball.y_velocity = 0;
-		Console::ForegroundColor(ConsoleColor::Red);
-		Console::SetCursorPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-		std::cout << "YOU LOST!!! Press R to restart";
+		
 	}
 }
