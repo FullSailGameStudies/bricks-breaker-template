@@ -89,14 +89,19 @@ void Game::CheckCollision()
 			ball.y_velocity *= -1;
 
 			// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
-			if (bricks[i].color == 0) {
+			if (bricks[i].color == ConsoleColor::Black) {
 				bricks.erase(bricks.begin() + i);
 			}
 		}
 	}
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
-
+	if (bricks.empty()) {
+		ball.x_velocity = 0;
+		ball.y_velocity = 0;
+		Console::ForegroundColor(ConsoleColor::Green);
+		std::cout << "YOU WON!!! Press R to restart";
+	}
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
 	{
